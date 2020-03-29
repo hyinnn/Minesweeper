@@ -20,7 +20,9 @@ import './index.css';
 class Square extends React.Component {
   render() {
     return (<button className="square"  
-                    onClick={() => this.props.onClick() }>{this.props.value}</button>);
+                    onClick={() => this.props.onClick() }>
+              {this.props.value}
+            </button>);
   }
 }
 
@@ -32,10 +34,11 @@ class Board extends React.Component {
       const row = [];
 
       for (let j = 0; j < this.props.cols; j++) {
-        rows.push(<Square value={this.props.player[i][j]} />)
+        rows.push(<Square value={this.props.player[i][j]}
+                          onClick={() => this.props.onClick(i, j)} />)
       }
 
-      rows.push(<div>{row}</div>);
+      rows.push(<div className="board-row">{row}</div>);
     }
 
     return(<div>
@@ -59,7 +62,7 @@ class Game extends React.Component {
 
     for (let i = row - 1; i <= row + 1; i++) {
       for (let j = col - 1; j <= col + 1; j++) {
-        if (i >= 0 && i < this.M && j >= 0 && j < this.N && squares[i][j] == 'm') {
+        if (i >= 0 && i < this.M && j >= 0 && j < this.N && squares[i][j] === 'm') {
           adj++;
         }
       }
@@ -90,7 +93,7 @@ class Game extends React.Component {
 
     for (let i = 0; i < this.M; i++) {
       for (let j = 0; j < this.N; j++) {
-        if (squares[i][j] != 'm') {
+        if (squares[i][j] !== 'm') {
           squares[i][j] = this.countAdjMines(squares, i, j);
         }
       }
@@ -113,18 +116,21 @@ class Game extends React.Component {
     };
   }
 
-  handleClick() {
-    // Left click:
-    //    i) non-mine: expand
-    //    ii) mine: game-over
-    // Right click: place flag
+  // Reveal the square in the player board
+  handleClick(i, j) {
+    const squares = this.state.squares;
+    const player = this.state.player;
+
+    player[i][j] = squares[i][j];
+    this.setState({player: player});
   }
 
   render() {
     return (<Board rows={this.M}
                    cols={this.N}
                    squares={this.state.squares}
-                   player={this.state.player} />);
+                   player={this.state.player}
+                   onClick={(i, j) => this.handleClick(i, j)} />);
   }
 }
 

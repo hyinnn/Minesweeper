@@ -2,11 +2,18 @@
 	text-align: center;
 }
 
+.board-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
 .square {
 	padding: 0;
 	font-size: 24px;
 	height: 34px;
 	width: 34px;
+	text-align: center;
 }
 
 .game-icon {
