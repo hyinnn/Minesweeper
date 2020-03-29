@@ -3,7 +3,10 @@
 }
 
 .square {
-	padding: 20px 20px;
+	padding: 0;
+	font-size: 24px;
+	height: 34px;
+	width: 34px;
 }
 
 .game-icon {

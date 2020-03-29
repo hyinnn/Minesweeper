@@ -26,12 +26,13 @@ class Square extends React.Component {
 
 class Board extends React.Component {
   render() {
+    // Create the rendering board in an array
     const rows = [];
     for (let i = 0; i < this.props.rows; i++) {
       const row = [];
 
       for (let j = 0; j < this.props.cols; j++) {
-        rows.push(<Square value={this.props.squares[i][j]} />)
+        rows.push(<Square value={this.props.player[i][j]} />)
       }
 
       rows.push(<div>{row}</div>);
@@ -49,24 +50,51 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
+
+  // Input: 2D List, Integers
+  // Output: Integer
+  // Count the number of adjacent mines in given row and col index
+  countAdjMines(squares, row, col) {
+    let adj = 0;
+
+    for (let i = row - 1; i <= row + 1; i++) {
+      for (let j = col - 1; j <= col + 1; j++) {
+        if (i >= 0 && i < this.M && j >= 0 && j < this.N && squares[i][j] == 'm') {
+          adj++;
+        }
+      }
+    }
+
+    return adj;
+  }
+
+  // Return the board (2D array) with randomized mines placed and its number clues
   initializeSquares() {
     // Place random mines in the board
     // Describe number of adjacent mines for each square
     const squares = Array(this.M).fill().map(() => Array(this.N).fill(0));
+    let set = new Set();
 
     for (let i = 0; i < this.mines; i++) {
       let m = Math.floor(Math.random() * this.M);
       let n = Math.floor(Math.random() * this.N);
 
-      //console.log(m + ", " + n);
+      while (set.has(m * this.N + n)) {
+        m = Math.floor(Math.random() * this.M);
+        n = Math.floor(Math.random() * this.N);
+      }
 
+      set.add(m * this.N + n);
       squares[m][n] = 'm';
     }
 
-    //squares[0][0] = 'M';
-
-    //console.log(squares[0][0]);
-    //console.log(squares);
+    for (let i = 0; i < this.M; i++) {
+      for (let j = 0; j < this.N; j++) {
+        if (squares[i][j] != 'm') {
+          squares[i][j] = this.countAdjMines(squares, i, j);
+        }
+      }
+    }
 
     return squares;
   }
@@ -81,6 +109,7 @@ class Game extends React.Component {
 
     this.state = {
       squares: this.initializeSquares(),
+      player: Array(this.M).fill().map(() => Array(this.N).fill(null)), 
     };
   }
 
@@ -94,7 +123,8 @@ class Game extends React.Component {
   render() {
     return (<Board rows={this.M}
                    cols={this.N}
-                   squares={this.state.squares} />);
+                   squares={this.state.squares}
+                   player={this.state.player} />);
   }
 }
 
