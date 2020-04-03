@@ -172,6 +172,7 @@ class Game extends React.Component {
 
     const squares = this.state.squares;
     const player = this.state.player;
+    let count = this.state.revealCount;
     let square = squares[i][j];
 
     // Reveal all the mines if player stepped on mine
@@ -191,20 +192,34 @@ class Game extends React.Component {
     while (queue.length > 0) {
       let [row, col] = queue.pop();
 
+      if (player[row][col] === null) {
+        count++;
+      }
+
       // If 0, then expand
       // Else, just reveal
       player[row][col] = squares[row][col];
+      console.log(count);
 
       if (squares[row][col] === 0) {
         const adj = this.getAdj(player, row, col);
-        console.log(adj);
         for (const pos of adj) {
           queue.push(pos);
         }
       }
     }
 
-    this.setState({player: player});
+    this.setState({
+      player: player,
+      revealCount: count,
+    });
+
+    if (count === (this.M * this.N - this.mines)) {
+      alert("You won!");
+      this.setState({
+        gameIsOver: true,
+      });
+    }
   }
 
   render() {
