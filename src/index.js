@@ -114,6 +114,7 @@ class Game extends React.Component {
       squares: this.initializeSquares(),
       player: Array(this.M).fill().map(() => Array(this.N).fill(null)),
       gameIsOver: false, 
+      revealCount: 0,
     };
   }
 
@@ -134,6 +135,31 @@ class Game extends React.Component {
     }
 
     return end;
+  }
+
+  // Check if the row, col position is valid to reveal
+  // Within boundaries, and has not been revealed yet
+  isValid(player, row, col) {
+    return row >= 0 && row < this.M && col >= 0 && col < this.N && player[row][col] === null;
+  }
+
+  // Get all valid adjacent board positions
+  // Returns 2d Array where a pos is array [x, y]
+  getAdj(player, row, col) {
+    const adj = [];
+
+    for (let i = row - 1; i <= row + 1; i++) {
+      for (let j = col - 1; j <= col + 1; j++) {
+        if (i === row && j === col) {
+          continue;
+        }
+        if (this.isValid(player, i, j)) {
+          adj.push([i, j]);
+        }
+      }
+    }
+
+    return adj;
   }
 
   // Reveal the square in the player board
@@ -160,8 +186,24 @@ class Game extends React.Component {
       return;
     }
 
+    // Reveal all the squares on the player board
+    const queue = [[i, j]];
+    while (queue.length > 0) {
+      let [row, col] = queue.pop();
 
-    player[i][j] = squares[i][j];
+      // If 0, then expand
+      // Else, just reveal
+      player[row][col] = squares[row][col];
+
+      if (squares[row][col] === 0) {
+        const adj = this.getAdj(player, row, col);
+        console.log(adj);
+        for (const pos of adj) {
+          queue.push(pos);
+        }
+      }
+    }
+
     this.setState({player: player});
   }
 
