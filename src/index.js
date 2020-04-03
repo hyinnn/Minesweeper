@@ -20,7 +20,8 @@ import './index.css';
 class Square extends React.Component {
   render() {
     return (<button className="square"  
-                    onClick={() => this.props.onClick() }>
+                    onClick={() => this.props.onClick()}
+                    onContextMenu={() => this.props.handleContext()} >
               {this.props.value}
             </button>);
   }
@@ -35,7 +36,8 @@ class Board extends React.Component {
 
       for (let j = 0; j < this.props.cols; j++) {
         rows.push(<Square value={this.props.player[i][j]}
-                          onClick={() => this.props.onClick(i, j)} />)
+                          onClick={() => this.props.onClick(i, j)}
+                          onContextMenu={() => this.props.handleContext(i, j)} />)
       }
 
       rows.push(<div className="board-row">{row}</div>);
@@ -162,6 +164,30 @@ class Game extends React.Component {
     return adj;
   }
 
+  // Set the flag for right clicking a button
+  handleContext(i, j) {
+    if (this.state.gameIsOver) {
+      return;
+    }
+
+    alert("Hello!");
+    return;
+
+    const squares = this.state.squares;
+    const player = this.state.player;
+
+    if (player[i][j] === 'F') {
+      player[i][j] = null;
+    }
+    else if (player[i][j] === null) {
+      player[i][j] = 'F';
+    }
+
+    this.setState({
+      player: player,
+    });
+  }
+
   // Reveal the square in the player board
   // If the square is a mine: gameover
   // Else: reveal everything
@@ -227,7 +253,8 @@ class Game extends React.Component {
                    cols={this.N}
                    squares={this.state.squares}
                    player={this.state.player}
-                   onClick={(i, j) => this.handleClick(i, j)} />);
+                   onClick={(i, j) => this.handleClick(i, j)} 
+                   onContextMenu={(i, j) => this.handleContext(i, j)} />);
   }
 }
 
