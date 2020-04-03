@@ -112,14 +112,54 @@ class Game extends React.Component {
 
     this.state = {
       squares: this.initializeSquares(),
-      player: Array(this.M).fill().map(() => Array(this.N).fill(null)), 
+      player: Array(this.M).fill().map(() => Array(this.N).fill(null)),
+      gameIsOver: false, 
     };
   }
 
+  // Reveal all the mines on the board to the player board
+  revealAllMines(player, squares) {
+    const end = []; // Make a copy of the player board
+    for (let i = 0; i < squares.length; i++) {
+      end[i] = player[i].slice();
+    }
+
+    // Reveal the mines on the player board
+    for (let i = 0; i < squares.length; i++) {
+      for (let j = 0; j < squares[i].length; j++) {
+        if (squares[i][j] === 'm') {
+          end[i][j] = 'm';
+        }
+      }
+    }
+
+    return end;
+  }
+
   // Reveal the square in the player board
+  // If the square is a mine: gameover
+  // Else: reveal everything
   handleClick(i, j) {
+    if (this.state.gameIsOver) {
+      return;
+    }
+
     const squares = this.state.squares;
     const player = this.state.player;
+    let square = squares[i][j];
+
+    // Reveal all the mines if player stepped on mine
+    if (square === 'm') {
+      const end = this.revealAllMines(player, squares);
+
+      this.setState({
+        gameIsOver: true,
+        player: end,
+      });
+
+      return;
+    }
+
 
     player[i][j] = squares[i][j];
     this.setState({player: player});
