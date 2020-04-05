@@ -3,20 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
-// Minesweeper steps
-// 1. Create the board
-// 2. Handle click
-// 3. Implement game logic
-
-
-// Game Logic
-// 1. Place all the mines 
-// 2. Handle Click
-
-// Handle click
-// - Expand until hits a number
-// - 
-
 class Square extends React.Component {
   render() {
     return (<button className="square"  
