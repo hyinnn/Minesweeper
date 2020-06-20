@@ -3,21 +3,22 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 // Global variables
-const MINE = '*';
+const MINE = "*";
+const FLAG = "F";
 const COLORS = ['white', '#1E90FF', '#228B22', '#FF0000', '#191970', '#8B0000', 
                 '#3CB371', 'black', '#FFA07A']; 
 
 class Square extends React.Component {
   render() {
-    const weight = this.props.value === MINE ? "bolder" : "normal";
+    const weight = (this.props.value === MINE || this.props.value === FLAG) ? "bolder" : "normal";
     const valueStyle = {
-      "font-weight" : weight,
+      "fontWeight" : weight,
       "color" : COLORS[this.props.value],
     };
 
     return (<div className="square"  
                  onClick={() => this.props.onClick()}
-                 onContextMenu={() => this.props.handleContext()} >
+                 onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu()}} >
               <div style={valueStyle} className="value">{this.props.value}</div>
             </div>);
   }
@@ -38,7 +39,7 @@ class Board extends React.Component {
       for (let j = 0; j < this.props.cols; j++) {
         row.push(<Square value={this.props.player[i][j]}
                           onClick={() => this.props.onClick(i, j)}
-                          onContextMenu={() => this.props.handleContext(i, j)} />)
+                          onContextMenu={() => this.props.onContextMenu(i, j)} />)
       }
 
       rows.push(<div style={rowStyle} className="board-row">{row}</div>);
@@ -169,16 +170,15 @@ class Game extends React.Component {
     if (this.state.gameIsOver) {
       return;
     }
-    return;
 
     const squares = this.state.squares;
     const player = this.state.player;
 
-    if (player[i][j] === 'F') {
+    if (player[i][j] === FLAG) {
       player[i][j] = null;
     }
     else if (player[i][j] === null) {
-      player[i][j] = 'F';
+      player[i][j] = FLAG;
     }
 
     this.setState({
@@ -199,6 +199,11 @@ class Game extends React.Component {
     let count = this.state.revealCount;
     let square = squares[i][j];
 
+    // Do nothing if cell is flagged
+    if (player[i][j] === FLAG) {
+      return;
+    }
+
     // Reveal all the mines if player stepped on mine
     if (square === MINE) {
       const end = this.revealAllMines(player, squares);
@@ -211,7 +216,7 @@ class Game extends React.Component {
       return;
     }
 
-    // Reveal all the squares on the player board
+    // Reveal the clicked connected squares on the player board
     const queue = [[i, j]];
     while (queue.length > 0) {
       let [row, col] = queue.pop();
@@ -252,7 +257,7 @@ class Game extends React.Component {
                    squares={this.state.squares}
                    player={this.state.player}
                    onClick={(i, j) => this.handleClick(i, j)} 
-                   onContextMenu={(i, j) => this.handleContext(i, j)} />);
+                   onContextMenu={(i, j) => {this.handleContext(i, j)}} />);
   }
 }
 
