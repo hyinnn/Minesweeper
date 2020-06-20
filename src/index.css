@@ -1,25 +1,29 @@
-.board {
-	text-align: center;
+* {
+    box-sizing: border-box;
 }
 
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
+.board-row {
+    //border: 1px solid red;
+    height: 34px;
+    display: flex;
+    flex-direction: row;
 }
 
 .square {
-	padding: 0;
-	font-size: 24px;
-	height: 34px;
-	width: 34px;
-	text-align: center;
+    height: 34px;
+    width: 34px;
+    background-color: #D3D3D3;
+    border: 0.5px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.game-icon {
-	padding: 30px 30px;
-	margin: 0 auto;
-	margin-bottom: 10px;
-	display: block;
+.value {
+    text-align: center;
 }
 
+.board {
+    //display: flex;
+    //flex-direction: column;
+}

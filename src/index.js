@@ -3,30 +3,36 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 
+
 class Square extends React.Component {
   render() {
-    return (<button className="square"  
+    return (<div className="square"  
                     onClick={() => this.props.onClick()}
                     onContextMenu={() => this.props.handleContext()} >
-              {this.props.value}
-            </button>);
+              <div className="value">{this.props.value}</div>
+            </div>);
   }
 }
 
 class Board extends React.Component {
   render() {
+    // CSS styling for the row width
+    const rowStyle = {
+      width: this.props.cols * 34,
+    }
+
     // Create the rendering board in an array
     const rows = [];
     for (let i = 0; i < this.props.rows; i++) {
       const row = [];
 
       for (let j = 0; j < this.props.cols; j++) {
-        rows.push(<Square value={this.props.player[i][j]}
+        row.push(<Square value={this.props.player[i][j]}
                           onClick={() => this.props.onClick(i, j)}
                           onContextMenu={() => this.props.handleContext(i, j)} />)
       }
 
-      rows.push(<div className="board-row">{row}</div>);
+      rows.push(<div style={rowStyle} className="board-row">{row}</div>);
     }
 
     return(<div>
@@ -156,7 +162,7 @@ class Game extends React.Component {
       return;
     }
 
-    alert("Hello!");
+  
     return;
 
     const squares = this.state.squares;
