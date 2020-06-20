@@ -1,0 +1,2 @@
+*{box-sizing:border-box}.board-row{//border:1px solid red;flex-direction:row}.board-row,.square{height:34px;display:flex}.square{width:34px;background-color:#d3d3d3;border:.5px solid #000;justify-content:center;align-items:center}.value{text-align:center}.board{//display:flex;//flex-direction:column}
+/*# sourceMappingURL=main.f0158608.chunk.css.map */
