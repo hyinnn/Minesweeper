@@ -2,14 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-
+// Global variables
+const MINE = '*';
+const COLORS = ['white', '#1E90FF', '#228B22', '#FF0000', '#191970', '#8B0000', 
+                '#3CB371', 'black', '#FFA07A']; 
 
 class Square extends React.Component {
   render() {
+    const weight = this.props.value === MINE ? "bolder" : "normal";
+    const valueStyle = {
+      "font-weight" : weight,
+      "color" : COLORS[this.props.value],
+    };
+
     return (<div className="square"  
-                    onClick={() => this.props.onClick()}
-                    onContextMenu={() => this.props.handleContext()} >
-              <div className="value">{this.props.value}</div>
+                 onClick={() => this.props.onClick()}
+                 onContextMenu={() => this.props.handleContext()} >
+              <div style={valueStyle} className="value">{this.props.value}</div>
             </div>);
   }
 }
@@ -47,7 +56,6 @@ class Board extends React.Component {
 }
 
 class Game extends React.Component {
-
   // Input: 2D List, Integers
   // Output: Integer
   // Count the number of adjacent mines in given row and col index
@@ -56,7 +64,7 @@ class Game extends React.Component {
 
     for (let i = row - 1; i <= row + 1; i++) {
       for (let j = col - 1; j <= col + 1; j++) {
-        if (i >= 0 && i < this.M && j >= 0 && j < this.N && squares[i][j] === 'm') {
+        if (i >= 0 && i < this.M && j >= 0 && j < this.N && squares[i][j] === MINE) {
           adj++;
         }
       }
@@ -82,12 +90,12 @@ class Game extends React.Component {
       }
 
       set.add(m * this.N + n);
-      squares[m][n] = 'm';
+      squares[m][n] = MINE;
     }
 
     for (let i = 0; i < this.M; i++) {
       for (let j = 0; j < this.N; j++) {
-        if (squares[i][j] !== 'm') {
+        if (squares[i][j] !== MINE) {
           squares[i][j] = this.countAdjMines(squares, i, j);
         }
       }
@@ -122,8 +130,8 @@ class Game extends React.Component {
     // Reveal the mines on the player board
     for (let i = 0; i < squares.length; i++) {
       for (let j = 0; j < squares[i].length; j++) {
-        if (squares[i][j] === 'm') {
-          end[i][j] = 'm';
+        if (squares[i][j] === MINE) {
+          end[i][j] = MINE;
         }
       }
     }
@@ -161,8 +169,6 @@ class Game extends React.Component {
     if (this.state.gameIsOver) {
       return;
     }
-
-  
     return;
 
     const squares = this.state.squares;
@@ -194,7 +200,7 @@ class Game extends React.Component {
     let square = squares[i][j];
 
     // Reveal all the mines if player stepped on mine
-    if (square === 'm') {
+    if (square === MINE) {
       const end = this.revealAllMines(player, squares);
 
       this.setState({
