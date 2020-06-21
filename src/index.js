@@ -101,6 +101,27 @@ class Game extends React.Component {
     return squares;
   }
 
+  setEasy() {
+    this.M = 9;
+    this.N = 9;
+    this.mines = 10;
+    this.reset();
+  }
+
+  setMedium() {
+    this.M = 16;
+    this.N = 16;
+    this.mines = 40;
+    this.reset();
+  }
+
+  setHard() {
+    this.M = 16;
+    this.N = 30;
+    this.mines = 99;
+    this.reset();
+  }
+
   reset()  {
     this.setState({
       squares: this.initializeSquares(),
@@ -259,11 +280,11 @@ class Game extends React.Component {
   render() {
     return (
       <div>
-        <div className='settings' onClick={() => this.reset()}>
-          <button className="reset">Reset</button>
-          <button className="options">Easy</button>
-          <button className="options">Medium</button>
-          <button className="options">Difficult</button>
+        <div className='settings'>
+          <button className="reset" onClick={() => this.reset()}>Reset</button>
+          <button className="options" onClick={() => this.setEasy()}>Easy</button>
+          <button className="options" onClick={() => this.setMedium()}>Medium</button>
+          <button className="options" onClick={() => this.setHard()}>Hard</button>
         </div>
         <Board rows={this.M}
                cols={this.N}
