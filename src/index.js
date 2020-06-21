@@ -45,14 +45,10 @@ class Board extends React.Component {
       rows.push(<div style={rowStyle} className="board-row">{row}</div>);
     }
 
-    return(<div>
-      <div>
-        <button className="game-icon"></button>
-      </div>
+    return(
       <div className="board">
-        {rows}
-      </div>
-    </div>);
+          {rows}
+      </div>);
   }
 }
 
@@ -103,6 +99,15 @@ class Game extends React.Component {
     }
 
     return squares;
+  }
+
+  reset()  {
+    this.setState({
+      squares: this.initializeSquares(),
+      player: Array(this.M).fill().map(() => Array(this.N).fill(null)),
+      gameIsOver: false, 
+      revealCount: 0,
+    });
   }
 
 
@@ -252,12 +257,22 @@ class Game extends React.Component {
   }
 
   render() {
-    return (<Board rows={this.M}
-                   cols={this.N}
-                   squares={this.state.squares}
-                   player={this.state.player}
-                   onClick={(i, j) => this.handleClick(i, j)} 
-                   onContextMenu={(i, j) => {this.handleContext(i, j)}} />);
+    return (
+      <div>
+        <div className='settings' onClick={() => this.reset()}>
+          <button className="reset">Reset</button>
+          <button className="options">Easy</button>
+          <button className="options">Medium</button>
+          <button className="options">Difficult</button>
+        </div>
+        <Board rows={this.M}
+               cols={this.N}
+               squares={this.state.squares}
+               player={this.state.player}
+               onClick={(i, j) => this.handleClick(i, j)} 
+               onContextMenu={(i, j) => {this.handleContext(i, j)}} />
+        </div>
+    );
   }
 }
 
