@@ -101,20 +101,19 @@ class Game extends React.Component {
     return squares;
   }
 
+  // Set the difficulty of the game
   setEasy() {
     this.M = 9;
     this.N = 9;
     this.mines = 10;
     this.reset();
   }
-
   setMedium() {
     this.M = 16;
     this.N = 16;
     this.mines = 40;
     this.reset();
   }
-
   setHard() {
     this.M = 16;
     this.N = 30;
@@ -277,9 +276,15 @@ class Game extends React.Component {
     }
   }
 
+  shortCutReset(e) {
+    if (e.keyCode === 82) {
+      this.reset();
+    }
+  }
+
   render() {
     return (
-      <div>
+      <div style={{outline : "none"}} tabindex="0" onKeyDown={(e) => this.shortCutReset(e)}>
         <div className='settings'>
           <button className="reset" onClick={() => this.reset()}>Reset</button>
           <button className="options" onClick={() => this.setEasy()}>Easy</button>
