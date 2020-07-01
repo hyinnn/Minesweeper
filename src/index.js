@@ -286,7 +286,7 @@ class Game extends React.Component {
     return (
       <div style={{outline : "none"}} tabindex="0" onKeyDown={(e) => this.shortCutReset(e)}>
         <div className='settings'>
-          <button className="reset" onClick={() => this.reset()}>Reset</button>
+          <button className="reset" onClick={() => this.reset()}>Reset (r)</button>
           <button className="options" onClick={() => this.setEasy()}>Easy</button>
           <button className="options" onClick={() => this.setMedium()}>Medium</button>
           <button className="options" onClick={() => this.setHard()}>Hard</button>
